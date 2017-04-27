@@ -87,7 +87,9 @@
   </div>
   {/if}
 </form>
-<div class="alert alert-danger" role="alert" id="alert1"></div>
+{if !isset($error)}
+  <div class="alert alert-danger" role="alert" id="alert1"></div>
+{/if}
 <script>
   var r = Math.floor(Math.random() * 10)+4;
 

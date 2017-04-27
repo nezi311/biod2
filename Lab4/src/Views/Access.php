@@ -17,15 +17,6 @@
 			{
 				$this->set('error',$result['error']);
 			}
-			/*
-			if(isset($result))
-			{
-				if(array_key_exists($result, self::$messages))
-					$this->set('error', self::$messages[$result]);
-				else
-					$this->set('error', self::$messages[100]);
-			}
-			*/
-			$this->render('logform');
+				$this->render('logform');
 		}
 	}

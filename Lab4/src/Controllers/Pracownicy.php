@@ -37,7 +37,7 @@ class Pracownicy extends Controller
       $model=$this->getModel('Pracownicy');
           if($model)
           {
-            $data = $model->update($_POST['id'],$_POST['imie'],$_POST['nazwisko'],$_POST['dzial'],$_POST['stanowisko'],$_POST['telefon'],$_POST['uprawnienia']);
+            $data = $model->update($_POST['id'],$_POST['imie'],$_POST['nazwisko'],$_POST['dzial'],$_POST['stanowisko'],$_POST['telefon'],$_POST['uprawnienia'],$_POST['email']);
           }
           if($data['error']==="")
           {
@@ -148,7 +148,7 @@ class Pracownicy extends Controller
         $model=$this->getModel('Pracownicy');
             if($model)
             {
-              $data = $model->insert($_POST['imie'],$_POST['nazwisko'],$_POST['dzial'],$_POST['stanowisko'],$_POST['telefon'],$_POST['login'],$_POST['haslo'],$_POST['uprawnienia']);
+              $data = $model->insert($_POST['imie'],$_POST['nazwisko'],$_POST['dzial'],$_POST['stanowisko'],$_POST['telefon'],$_POST['login'],$_POST['haslo'],$_POST['uprawnienia'],$_POST['email']);
               //pobranie komunikatów o bledach
             }
             if($data['error'] === "") // jeśli bledy nie istnieją, przechodzimy do zakladnki "pracownicy"

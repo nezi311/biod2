@@ -85,11 +85,16 @@
 
 
 		// ** Dawid Dominiak **//
-		public function insert($imie,$nazwisko,$dzial,$stanowisko,$telefon,$login,$haslo,$uprawnienia)
+		public function insert($imie,$nazwisko,$dzial,$stanowisko,$telefon,$login,$haslo,$uprawnienia,$email)
 		{
 			$blad=false;
 			$data = array();
 			$data['error']="";
+			if($email === null || $email === "")
+			{
+				$data['error'] .= 'Nieokreślony email! <br>';
+				$blad=true;
+			}
 			if($imie === null || $imie === "")
 			{
 				$data['error'] .= 'Nieokreślone imię! <br>';
@@ -134,16 +139,17 @@
 			{
 				try
 				{
-					$stmt = $this->pdo->prepare('INSERT INTO `pracownicy`(`imie`,`nazwisko`,`dzial`,`stanowisko`,`telefon`,`login`,`haslo`,`uprawnienia`) VALUES (:imie,:nazwisko,:dzial,:stanowisko,:telefon,:login,:password,:role)');
+					$stmt = $this->pdo->prepare('INSERT INTO `pracownicy`(`imie`,`nazwisko`,`dzial`,`stanowisko`,`telefon`,`login`,`haslo`,`uprawnienia`,`email`) VALUES (:imie,:nazwisko,:dzial,:stanowisko,:telefon,:login,:password,:role,:email)');
 			    $stmt -> bindValue(':login',$login,PDO::PARAM_STR);
-			    $md5password = md5($haslo);
-			    $stmt -> bindValue(':password',$md5password,PDO::PARAM_STR);
+			    //$md5password = md5($haslo);
+			    $stmt -> bindValue(':password',$haslo,PDO::PARAM_STR);
 			    $stmt -> bindValue(':role',$uprawnienia,PDO::PARAM_INT);
 			    $stmt -> bindValue(':imie',$imie,PDO::PARAM_STR);
 			    $stmt -> bindValue(':nazwisko',$nazwisko,PDO::PARAM_STR);
 			    $stmt -> bindValue(':dzial',$dzial,PDO::PARAM_STR);
 			    $stmt -> bindValue(':stanowisko',$stanowisko,PDO::PARAM_STR);
 			    $stmt -> bindValue(':telefon',$telefon,PDO::PARAM_STR);
+					$stmt -> bindValue(':email',$email,PDO::PARAM_STR);
 			    $wynik_zapytania = $stmt -> execute();
 				}
 				catch(\PDOException $e)
@@ -157,11 +163,16 @@
 
 
 		// ** Dawid Dominiak **//
-		public function update($id,$imie,$nazwisko,$dzial,$stanowisko,$telefon,$uprawnienia)
+		public function update($id,$imie,$nazwisko,$dzial,$stanowisko,$telefon,$uprawnienia,$email)
 		{
 			$blad=false;
 			$data = array();
 			$data['error']="";
+			if($email === null || $email === "")
+			{
+				$data['error'] .= 'Nieokreślony email! <br>';
+				$blad=true;
+			}
 			if($id === null || $id === "")
 			{
 				$data['error'] .= 'Nieokreślone id! <br>';
@@ -201,7 +212,7 @@
 				{
 					try
 					{
-						$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET `imie`=:imie,`nazwisko`=:nazwisko,`dzial`=:dzial,`stanowisko`=:stanowisko,`telefon`=:telefon,`uprawnienia`=:role WHERE `id`=:id');
+						$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET `imie`=:imie,`nazwisko`=:nazwisko,`dzial`=:dzial,`stanowisko`=:stanowisko,`telefon`=:telefon,`uprawnienia`=:role,`email`=:email WHERE `id`=:id');
 						$stmt -> bindValue(':id',$id,PDO::PARAM_INT);
 						$stmt -> bindValue(':role',$uprawnienia,PDO::PARAM_INT);
 						$stmt -> bindValue(':imie',$imie,PDO::PARAM_STR);
@@ -209,6 +220,7 @@
 						$stmt -> bindValue(':dzial',$dzial,PDO::PARAM_STR);
 						$stmt -> bindValue(':stanowisko',$stanowisko,PDO::PARAM_STR);
 						$stmt -> bindValue(':telefon',$telefon,PDO::PARAM_STR);
+						$stmt -> bindValue(':email',$email,PDO::PARAM_STR);
 						$wynik_zapytania = $stmt -> execute();
 					}
 					catch(\PDOException $e)
@@ -253,10 +265,12 @@
 
 				try
 				{
-					$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET `haslo`= :haslo WHERE `id`=:id');
+					$nastepnaDataZmianyHasla = date("Y-m-d",strtotime("+31 Days"));
+					$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET `haslo`= :haslo, `datazmianyhasla`=:nastepnazmiana WHERE `id`=:id');
 					$stmt -> bindValue(':id',$id,PDO::PARAM_INT);
-					$md5password = md5($pass1);
-					$stmt -> bindValue(':haslo',$md5password,PDO::PARAM_STR);
+					//$md5password = md5($pass1);
+					$stmt -> bindValue(':haslo',$pass1,PDO::PARAM_STR);
+					$stmt -> bindValue(':nastepnazmiana',$nastepnaDataZmianyHasla,PDO::PARAM_STR);
 					$wynik_zapytania = $stmt -> execute();
 				}
 				catch(\PDOException $e)
@@ -286,7 +300,7 @@
 
 							//d($tempArray['pracownik'][0]['aktywny']);
 
-							$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET `aktywny`= :aktywny WHERE `id`=:id');
+							$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET `aktywny`= :aktywny, `iloscniepoprawnychlogowan`=0 WHERE `id`=:id');
 							$stmt -> bindValue(':id',$id,PDO::PARAM_INT);
 							if($tempArray['pracownik'][0]['aktywny']==0)
 							{

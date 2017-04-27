@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.31, created on 2017-04-26 22:18:27
+/* Smarty version 3.1.31, created on 2017-04-27 18:07:29
   from "E:\xampp\htdocs\biod\Lab4\templates\logform.html.php" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.31',
-  'unifunc' => 'content_59010093a83af7_73284076',
+  'unifunc' => 'content_590217413a4f15_41602660',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'c4d8aef5021fd4fbd669ff015dbfae4d30fc080f' => 
     array (
       0 => 'E:\\xampp\\htdocs\\biod\\Lab4\\templates\\logform.html.php',
-      1 => 1493235619,
+      1 => 1493309245,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_59010093a83af7_73284076 (Smarty_Internal_Template $_smarty_tpl) {
+function content_590217413a4f15_41602660 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <html>
     <head>
@@ -136,8 +136,10 @@ AccessRoles/login" method="POST" onsubmit="return get_action(logform)">
   </div>
   <?php }?>
 </form>
-<div class="alert alert-danger" role="alert" id="alert1"></div>
-<?php echo '<script'; ?>
+<?php if (!isset($_smarty_tpl->tpl_vars['error']->value)) {?>
+  <div class="alert alert-danger" role="alert" id="alert1"></div>
+<?php }
+echo '<script'; ?>
 >
   var r = Math.floor(Math.random() * 10)+4;
 

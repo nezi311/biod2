@@ -62,13 +62,13 @@
 			}
 
 			// ** Dawid Dominiak **//
-			public function passReset($id, $dane=null)
+			public function passReset($id=null, $dane=null)
 			{
 
 
+				if(isset($dane['error']))
 					if($dane['error'] !== "" )
 					{
-						//d($dane);
 						$this->set('error',$dane['error']);
 					}
 

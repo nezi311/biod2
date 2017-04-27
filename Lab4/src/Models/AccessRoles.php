@@ -114,13 +114,30 @@
 											//d($licznik);
 												if(!$blad)
 												{
-													\Tools\AccessRoles::login($login,$user[0]['uprawnienia'],$user[0]['id']);
 
-													$niepoprawnelogowania=0;
-													$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET iloscniepoprawnychlogowan = :bind WHERE `login`=:login');
-													$stmt->bindValue(':login', $user[0]['login'], PDO::PARAM_STR);
-													$stmt->bindValue(':bind', $niepoprawnelogowania, PDO::PARAM_INT);
-													$result = $stmt->execute();
+														//(date("Y-m-d",strotime("+31 Days"));
+
+
+														if($user[0]['aktywny']==1)
+														{
+															\Tools\AccessRoles::login($login,$user[0]['uprawnienia'],$user[0]['id']);
+															$niepoprawnelogowania=0;
+															$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET iloscniepoprawnychlogowan = :bind WHERE `login`=:login');
+															$stmt->bindValue(':login', $user[0]['login'], PDO::PARAM_STR);
+															$stmt->bindValue(':bind', $niepoprawnelogowania, PDO::PARAM_INT);
+															$result = $stmt->execute();
+															$data['datazmianyhasla']=$user[0]['datazmianyhasla'];
+
+															$dzisiaj=date("Y-m-d");
+															if($user[0]['datazmianyhasla']<$dzisiaj)
+																$data['error'].="Upłyneło 30 dni od ostatniej zminy hasła, zmień je teraz! <br>";
+														}
+														else
+														{
+															$data['error'].="Konto nieaktywne! <br>";
+															$data['email']=$user[0]['email'];
+														}
+
 
 													//d($_SESSION);
 													//return 0;
@@ -128,14 +145,22 @@
 												}
 												else
 												{
-													//(date("Y-m-d",strotime("+31 Days"));
+														$niepoprawnelogowania=$user[0]['iloscniepoprawnychlogowan']+1;
+														$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET iloscniepoprawnychlogowan = :bind WHERE `login`=:login');
+														$stmt->bindValue(':login', $user[0]['login'], PDO::PARAM_STR);
+														$stmt->bindValue(':bind', $niepoprawnelogowania, PDO::PARAM_INT);
+														$result = $stmt->execute();
+														$data['error'].="Login lub hasło niepoprawne! <br>";
 
-													$niepoprawnelogowania=$user[0]['iloscniepoprawnychlogowan']+1;
-													$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET iloscniepoprawnychlogowan = :bind WHERE `login`=:login');
-													$stmt->bindValue(':login', $user[0]['login'], PDO::PARAM_STR);
-													$stmt->bindValue(':bind', $niepoprawnelogowania, PDO::PARAM_INT);
-													$result = $stmt->execute();
-													$data['error'].="Login lub hasło niepoprawne! <br>";
+														if($niepoprawnelogowania>=3)
+														{
+																$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET aktywny = 0 WHERE `login`=:login');
+																$stmt->bindValue(':login', $user[0]['login'], PDO::PARAM_STR);
+																$result = $stmt->execute();
+																$data['error'].="Konto nieaktywne! <br>";
+														}
+
+
 													//return 1
 													return $data;
 												}
