@@ -49,7 +49,7 @@
 										$user = $stmt->fetchAll();
 										$stmt->closeCursor();
 
-										//d($user[0]);
+										//d($user);
 
 										if(!$user)
 										{
@@ -85,13 +85,15 @@
 
 											//d($charArrayPassword);
 											//d($hasloFormularz);
+											//d(count($charArrayPassword));
 
 											$blad=false;
+											$licznik=count($charArrayPassword);
 											for($i=0;$i<count($charArrayPassword);$i++)
 											{
-												if($hasloFormularz[$i]!="")
+												if(strlen($hasloFormularz[$i])!=0)
 												{
-													if(strcmp($charArrayPassword[$i],$hasloFormularz[$i]==0))
+													if(strcmp($charArrayPassword[$i],$hasloFormularz[$i])==0)
 													{
 
 													}
@@ -100,17 +102,40 @@
 															$blad=true;
 													}
 												}
+												else
+													$licznik--;
 											}
 
+											if($licznik==0) // w pola nie wpisano zupelnie nic
+											{
+											 $blad=true;
+											}
+
+											//d($licznik);
 												if(!$blad)
 												{
-													\Tools\AccessRoles::login($login,$user[0]['uprawnienia']);
+													\Tools\AccessRoles::login($login,$user[0]['uprawnienia'],$user[0]['id']);
+
+													$niepoprawnelogowania=0;
+													$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET iloscniepoprawnychlogowan = :bind WHERE `login`=:login');
+													$stmt->bindValue(':login', $user[0]['login'], PDO::PARAM_STR);
+													$stmt->bindValue(':bind', $niepoprawnelogowania, PDO::PARAM_INT);
+													$result = $stmt->execute();
+
 													//d($_SESSION);
 													//return 0;
 													return $data;
 												}
 												else
 												{
+													//(date("Y-m-d",strotime("+31 Days"));
+
+													$niepoprawnelogowania=$user[0]['iloscniepoprawnychlogowan']+1;
+													$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET iloscniepoprawnychlogowan = :bind WHERE `login`=:login');
+													$stmt->bindValue(':login', $user[0]['login'], PDO::PARAM_STR);
+													$stmt->bindValue(':bind', $niepoprawnelogowania, PDO::PARAM_INT);
+													$result = $stmt->execute();
+													$data['error'].="Login lub hasło niepoprawne! <br>";
 													//return 1
 													return $data;
 												}
@@ -148,6 +173,8 @@
 		}
 		return $data;
 	}
+
+
 
 		public function logout()
 		{

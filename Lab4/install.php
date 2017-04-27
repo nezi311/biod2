@@ -19,6 +19,8 @@ $stmt = $pdo->query("CREATE TABLE IF NOT EXISTS `pracownicy`
   `login` VARCHAR(100) NOT NULL UNIQUE,
   `haslo` VARCHAR(150) NOT NULL,
   `uprawnienia` INT NOT NULL,
+  `iloscniepoprawnychlogowan` INT DEFAULT 0,
+  `datazmianyhasla` DATE NULL,
   `aktywny` INT DEFAULT 1,
   PRIMARY KEY (id)
 );");
@@ -38,11 +40,11 @@ $stmt->execute();
 
 
  $users = array();
- $users[]=array('imie'=>'Dawid','nazwisko'=>'Dominiak','dzial'=>'IT','stanowisko'=>'Administrator','telefon'=>'666666666','login'=>'root','haslo'=>'password','uprawnienia'=>0);
- $users[]=array('imie'=>'Marcin','nazwisko'=>'Kornalski','dzial'=>'Obsługa klienta','stanowisko'=>'Pracownik','telefon'=>'777666555','login'=>'pracownik','haslo'=>'password','uprawnienia'=>1);
+ $users[]=array('imie'=>'Dawid','nazwisko'=>'Dominiak','dzial'=>'IT','stanowisko'=>'Administrator','telefon'=>'666666666','login'=>'root','haslo'=>'password','uprawnienia'=>0,'datazmianyhasla'=>'1111-11-11');
+ $users[]=array('imie'=>'Marcin','nazwisko'=>'Kornalski','dzial'=>'Obsługa klienta','stanowisko'=>'Pracownik','telefon'=>'777666555','login'=>'pracownik','haslo'=>'password','uprawnienia'=>1,'datazmianyhasla'=>'1111-11-11');
  foreach($users as $element_user)
  {
-   $stmt = $pdo->prepare('INSERT INTO `pracownicy`(`imie`,`nazwisko`,`dzial`,`stanowisko`,`telefon`,`login`,`haslo`,`uprawnienia`) VALUES (:imie,:nazwisko,:dzial,:stanowisko,:telefon,:login,:password,:role)');
+   $stmt = $pdo->prepare('INSERT INTO `pracownicy`(`imie`,`nazwisko`,`dzial`,`stanowisko`,`telefon`,`login`,`haslo`,`uprawnienia`,`datazmianyhasla`) VALUES (:imie,:nazwisko,:dzial,:stanowisko,:telefon,:login,:password,:role,:data)');
    $stmt -> bindValue(':login',$element_user['login'],PDO::PARAM_STR);
    //$md5password = md5($element_user['haslo']);
    //$stmt -> bindValue(':password',$md5password,PDO::PARAM_STR);
@@ -53,6 +55,7 @@ $stmt->execute();
    $stmt -> bindValue(':dzial',$element_user['dzial'],PDO::PARAM_STR);
    $stmt -> bindValue(':stanowisko',$element_user['stanowisko'],PDO::PARAM_STR);
    $stmt -> bindValue(':telefon',$element_user['telefon'],PDO::PARAM_STR);
+   $stmt -> bindValue(':data',$element_user['datazmianyhasla'],PDO::PARAM_STR);
    $wynik_zapytania = $stmt -> execute();
 
  }

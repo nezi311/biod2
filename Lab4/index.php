@@ -13,9 +13,9 @@
 		// za to w views dane są wyciągane za pomocą modeli (models) i następnie przekazywane do szablonu (tamplates)
 
 		// source dla windowsa
-		//\Config\Website\Config::$subdir = 'biod/Lab3/';
+		//\Config\Website\Config::$subdir = 'biod/Lab4';
 		// source dla linuxa
-		\Config\Website\Config::$subdir = 'biod/Lab4/';
+		\Config\Website\Config::$subdir = 'biod%20/Lab4/';
 
 
 
