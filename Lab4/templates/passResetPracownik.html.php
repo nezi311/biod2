@@ -19,7 +19,7 @@
     <div class="form-group">
       <label class="control-label col-sm-2" for="haslo1">Nowe hasło :</label>
       <div class="col-sm-10">
-        <input type="password" class="form-control" id="haslo1" name="haslo1" placeholder="Wprowadź hasło">
+        <input type="password" class="form-control" id="haslo1" name="haslo1"  placeholder="Wprowadź hasło">
       </div>
     </div>
 

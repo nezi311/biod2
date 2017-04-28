@@ -49,8 +49,9 @@
 							$kod.=$tablicaznakow[rand(0,sizeof($tablicaznakow)-1)];
 						}
 
+
 						$model2 = $this->getModel("Odblokuj");
-						$model2->insert($result['email'],$kod);
+						d($model2->insert($result['email'],$kod));
 
 						//mailto
 

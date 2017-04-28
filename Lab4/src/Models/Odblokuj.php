@@ -12,7 +12,7 @@
       else
           try
           {
-              $stmt = $this->pdo->query("SELECT * FROM odblokuj");
+              $stmt = $this->pdo->query("SELECT * FROM Odblokuj");
               $odblokuj = $stmt->fetchAll();
               $stmt->closeCursor();
               if($odblokuj && !empty($odblokuj))
@@ -27,18 +27,48 @@
       return $data;
     }
 
-
-		// ** Dawid Dominiak **//
-		public function delete($id)
+		public function getOne($kod)
 		{
 			$data = array();
-				if($id === NULL || $id === "")
-					$data['error'] = 'Nieokreślone ID!';
+			$blad=false;
+			if(!$this->pdo)
+					$data['error'] = 'Połączenie z bazą nie powidoło się!';
+			if($kod === NULL || $kod === "")
+			{
+				$data['error'] = 'Nieokreślony KOD!';
+				$blad=true;
+			}
+			if(!$blad)
+			{
+				try
+				{
+						$stmt = $this->pdo->prepare('DELETE FROM `Odblokuj` WHERE kod=:kod');
+						$stmt -> bindValue(':kod',$kod,PDO::PARAM_STR);
+						$odblokuj = $stmt -> execute();
+						if($odblokuj && !empty($odblokuj))
+								$data['odblokuj'] = $odblokuj;
+						else
+								$data['odblokuj'] = array();
+				}
+				catch(\PDOException $e)
+				{
+						$data['error'] = 'Błąd odczytu danych z bazy! ';
+				}
+			}
+			return $data;
+		}
+
+		// ** Dawid Dominiak **//
+		public function delete($kod)
+		{
+			$data = array();
+				if($kod === NULL || $kod === "")
+					$data['error'] = 'Nieokreślony KOD!';
 				else
 					try
 					{
-						$stmt = $this->pdo->prepare('DELETE FROM `pracownicy` WHERE id=:id');
-				    $stmt -> bindValue(':id',$id,PDO::PARAM_INT);
+						$stmt = $this->pdo->prepare('DELETE FROM `Odblokuj` WHERE kod=:kod');
+				    $stmt -> bindValue(':kod',$kod,PDO::PARAM_STR);
 				    $wynik_zapytania = $stmt -> execute();
 					}
 					catch(\PDOException $e)
@@ -70,7 +100,7 @@
 			{
 				try
 				{
-					$stmt = $this->pdo->prepare('INSERT INTO `odblokuj`(`email`,`kod`) VALUES (:email,:kod)');
+					$stmt = $this->pdo->prepare('INSERT INTO `Odblokuj`(`email`,`kod`) VALUES (:email,:kod)');
 			    $stmt -> bindValue(':kod',$kod,PDO::PARAM_STR);
 					$stmt -> bindValue(':email',$email,PDO::PARAM_STR);
 			    $wynik_zapytania = $stmt -> execute();
@@ -89,29 +119,44 @@
 		public function zmienAktywnosc($klucz)
 		{
 			$data = array();
-			if($id === NULL || $id === "")
-					$data['error'] = 'Nieokreślone id!';
-				else
+			$data['error']="";
+			$blad=false;
+			if($klucz === NULL || $klucz === "")
+			{
+				$data['error'] = 'Nieokreślony klucz!';
+				$blad=true;
+			}
+				if(!$blad)
 				{
 
 						try
 						{
 							$tempArray=array();
-							$tempArray=$this->getOne($id);
+							$tempArray=$this->getOne($klucz);
 
-							//d($tempArray['pracownik'][0]['aktywny']);
+							if(isset($tempArray['email']))
+							{
+								$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET `aktywny`= :aktywny, `iloscniepoprawnychlogowan`=0 WHERE `email`=:email');
+								$stmt -> bindValue(':email',$tempArray['email'],PDO::PARAM_STR);
+								if($tempArray['pracownik'][0]['aktywny']==0)
+								{
+									$stmt -> bindValue(':aktywny',1,PDO::PARAM_INT);
+								}
+								else
+								{
+									$stmt -> bindValue(':aktywny',0,PDO::PARAM_INT);
+								}
+								$wynik_zapytania = $stmt -> execute();
+								$data['error'].='Odblokowano konto! <br>';
 
-							$stmt = $this->pdo->prepare('UPDATE `pracownicy` SET `aktywny`= :aktywny, `iloscniepoprawnychlogowan`=0 WHERE `id`=:id');
-							$stmt -> bindValue(':id',$id,PDO::PARAM_INT);
-							if($tempArray['pracownik'][0]['aktywny']==0)
-							{
-								$stmt -> bindValue(':aktywny',1,PDO::PARAM_INT);
+								if($wynik_zapytania)
+								{
+									$this->delete($klucz);
+								}
+
 							}
-							else
-							{
-								$stmt -> bindValue(':aktywny',0,PDO::PARAM_INT);
-							}
-							$wynik_zapytania = $stmt -> execute();
+
+
 						}
 						catch(\PDOException $e)
 						{

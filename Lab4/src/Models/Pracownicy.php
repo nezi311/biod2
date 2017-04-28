@@ -130,6 +130,26 @@
 				$data['error'] .= 'Nieokreślone hasło! <br>';
 				$blad=true;
 			}
+			if(strlen($haslo)<8)
+			{
+				$data['error'] .= 'Hasło musi mieć więcej ż 7 znaków! <br>';
+				$blad=true;
+			}
+			if(!preg_match("#[0-9]+#",$haslo))
+			{
+				$data['error'] .= 'Hasło musi mieć cyfry w sobie <br>';
+				$blad=true;
+			}
+			if(!preg_match("#[A-Z]+#",$haslo))
+			{
+				$data['error'] .= 'Hasło musi mieć duże znaki <br>';
+				$blad=true;
+			}
+			if(!preg_match("#[a-z]+#",$haslo))
+			{
+				$data['error'] .= 'Hasło musi mieć małe znaki <br>';
+				$blad=true;
+			}
 			if($uprawnienia === null || $uprawnienia === "")
 			{
 				$data['error'] .= 'Nieokreślone uprawnienia! <br>';
@@ -243,6 +263,26 @@
 			if($id === NULL || $id === "")
 				{
 					$data['error'] .= 'Nieokreślone id! <br>';
+					$blad=true;
+				}
+				if(strlen($pass1)<8)
+				{
+					$data['error'] .= 'Hasło musi mieć więcej ż 7 znaków! <br>';
+					$blad=true;
+				}
+				if(!preg_match("#[0-9]+#",$pass1))
+				{
+					$data['error'] .= 'Hasło musi mieć cyfry w sobie <br>';
+					$blad=true;
+				}
+				if(!preg_match("#[A-Z]+#",$pass1))
+				{
+					$data['error'] .= 'Hasło musi mieć duże znaki <br>';
+					$blad=true;
+				}
+				if(!preg_match("#[a-z]+#",$pass1))
+				{
+					$data['error'] .= 'Hasło musi mieć małe znaki <br>';
 					$blad=true;
 				}
 			if($pass1 === NULL || $pass1 === "")

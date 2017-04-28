@@ -27,6 +27,18 @@ $stmt = $pdo->query("CREATE TABLE IF NOT EXISTS `pracownicy`
 );");
 
 
+$stmt = $pdo->query("DROP TABLE IF EXISTS `Odblokuj`");
+$stmt->execute();
+$stmt = $pdo->query("CREATE TABLE IF NOT EXISTS `Odblokuj`
+(
+  `id` INT AUTO_INCREMENT,
+  `email` VARCHAR(150) NOT NULL,
+  `kod` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (id)
+);");
+$stmt->execute();
+
+
 $stmt = $pdo->query("DROP TABLE IF EXISTS `hasla`");
 $stmt->execute();
 $stmt = $pdo->query("CREATE TABLE IF NOT EXISTS `hasla`

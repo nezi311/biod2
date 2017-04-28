@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.31, created on 2017-04-27 15:52:40
+/* Smarty version 3.1.31, created on 2017-04-28 11:39:43
   from "/opt/lampp/htdocs/biod /Lab4/templates/passResetPracownik.html.php" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.31',
-  'unifunc' => 'content_5901f7a88445d7_06875415',
+  'unifunc' => 'content_59030ddff19c38_60488005',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '1ef93ae9cfc8aeb8bf03a21c9f8f1fe4493eb30e' => 
     array (
       0 => '/opt/lampp/htdocs/biod /Lab4/templates/passResetPracownik.html.php',
-      1 => 1493297836,
+      1 => 1493372381,
       2 => 'file',
     ),
   ),
@@ -22,7 +22,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:footer.html.php' => 1,
   ),
 ),false)) {
-function content_5901f7a88445d7_06875415 (Smarty_Internal_Template $_smarty_tpl) {
+function content_59030ddff19c38_60488005 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_subTemplateRender("file:header.html.php", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
 ?>
 
@@ -50,7 +50,7 @@ Pracownicy/reset" method="POST" id="ResetHasla">
     <div class="form-group">
       <label class="control-label col-sm-2" for="haslo1">Nowe hasło :</label>
       <div class="col-sm-10">
-        <input type="password" class="form-control" id="haslo1" name="haslo1" placeholder="Wprowadź hasło">
+        <input type="password" class="form-control" id="haslo1" name="haslo1"  placeholder="Wprowadź hasło">
       </div>
     </div>
 
